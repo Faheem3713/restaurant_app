@@ -9,6 +9,7 @@ class LoginPage extends StatelessWidget {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _key = GlobalKey<FormState>();
+  final ValueNotifier<bool> isCheckBox = ValueNotifier(false);
   @override
   Widget build(BuildContext context) {
     DataServices.instance.getData();
@@ -55,10 +56,16 @@ class LoginPage extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Checkbox(
-                      value: true,
-                      onChanged: (value) {},
-                    ),
+                    ValueListenableBuilder(
+                        valueListenable: isCheckBox,
+                        builder: (context, value, _) {
+                          return Checkbox(
+                            value: value,
+                            onChanged: (value) {
+                              isCheckBox.value = value!;
+                            },
+                          );
+                        }),
                     const Text('Remember Me'),
                     const Spacer(),
                     const Text(
@@ -71,6 +78,7 @@ class LoginPage extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
+                  height: 45,
                   width: double.infinity,
                   child: FilledButton(
                     onPressed: () {
