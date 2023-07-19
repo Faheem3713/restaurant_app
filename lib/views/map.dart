@@ -13,32 +13,13 @@ class FindMap extends StatefulWidget {
 class FindMapState extends State<FindMap> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
-
   CameraPosition? _kGooglePlex;
-
-  Set<Marker> marker = {};
+  Map<MarkerId, Marker> marker = {};
 
   @override
   void initState() {
     super.initState();
     getData();
-  }
-
-  void getData() {
-    marker.add(const Marker(
-      markerId: MarkerId('place_name'),
-      position: LatLng(37.43296265331129, -122.08832357078792),
-      // icon: BitmapDescriptor.,
-      infoWindow: InfoWindow(
-        title: 'title',
-        snippet: 'address',
-      ),
-    ));
-
-    _kGooglePlex = CameraPosition(
-      target: LatLng(widget.latlng['lat'], widget.latlng['lng']),
-      zoom: 14.4746,
-    );
   }
 
   @override
@@ -48,11 +29,29 @@ class FindMapState extends State<FindMap> {
         compassEnabled: true,
         mapType: MapType.normal,
         initialCameraPosition: _kGooglePlex!,
-        markers: marker,
+        markers: marker.values.toSet(),
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
       ),
+    );
+  }
+
+  void getData() {
+    final markerVal = Marker(
+      markerId: const MarkerId('place'),
+      position: LatLng(widget.latlng['lat'], widget.latlng['lng']),
+      infoWindow: const InfoWindow(
+        title: 'title',
+        snippet: 'address',
+      ),
+    );
+    setState(() {
+      marker[const MarkerId('place')] = markerVal;
+    });
+    _kGooglePlex = CameraPosition(
+      target: LatLng(widget.latlng['lat'], widget.latlng['lng']),
+      zoom: 14.4746,
     );
   }
 }

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:task_1/constants/app_constants.dart';
-import 'package:task_1/views/auth/login.dart';
+
+import 'package:task_1/views/splash.dart';
 
 Future<void> main() async {
   await Hive.initFlutter();
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
         useMaterial3: true,
       ),
-      home: const LoginPage(),
+      home: const SplashScreen(),
     );
   }
 }

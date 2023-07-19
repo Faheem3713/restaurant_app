@@ -2,75 +2,97 @@ import 'package:flutter/material.dart';
 import 'package:task_1/constants/app_constants.dart';
 import 'package:task_1/views/home/home_screen.dart';
 
-import '../../services/data_services.dart';
+import '../../controllers/data_services.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
-
+  LoginPage({super.key});
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final _key = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     DataServices.instance.getData();
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(14.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.asset('assets/image/login_pic.png'),
-            Text(
-              'Log in\nyour account',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            CustomTextField(
-              text: 'User Name',
-              validator: (p0) {
-                return null;
-              },
-            ),
-            kHeight10,
-            CustomTextField(
-              validator: (p0) {
-                return null;
-              },
-              text: 'Password',
-              isObscure: true,
-            ),
-            Row(
+        child: Form(
+          key: _key,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Checkbox(
-                  value: true,
-                  onChanged: (value) {},
+                Image.asset('assets/image/login_pic.png'),
+                Text(
+                  'Log in\nyour account',
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
-                const Text('Remember Me'),
-                const Spacer(),
-                const Text(
-                  'Forgot passwort.?',
-                  style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.indigo),
+                CustomTextField(
+                  controller: emailController,
+                  text: 'User Name',
+                  validator: (val) {
+                    if (val == null || val.isEmpty) {
+                      return 'Field cannot be empty';
+                    } else {
+                      return null;
+                    }
+                  },
                 ),
+                kHeight10,
+                CustomTextField(
+                  controller: passwordController,
+                  validator: (val) {
+                    if (val == null) {
+                      return 'invalid password';
+                    } else if (val.length < 6) {
+                      return 'Enter minimum 6 character';
+                    } else {
+                      return null;
+                    }
+                  },
+                  text: 'Password',
+                  isObscure: true,
+                ),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: true,
+                      onChanged: (value) {},
+                    ),
+                    const Text('Remember Me'),
+                    const Spacer(),
+                    const Text(
+                      'Forgot passwort.?',
+                      style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.indigo),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: () {
+                      if (_key.currentState!.validate()) {
+                        DataServices.instance.addEmail(emailController.text);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomeScreen(),
+                            ));
+                      }
+                    },
+                    style: FilledButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8))),
+                    child: const Text('Login'),
+                  ),
+                )
               ],
             ),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomeScreen(),
-                      ));
-                },
-                style: FilledButton.styleFrom(
-                    backgroundColor: primaryColor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8))),
-                child: const Text('Login'),
-              ),
-            )
-          ],
+          ),
         ),
       ),
     );
@@ -82,13 +104,16 @@ class CustomTextField extends StatelessWidget {
       {super.key,
       required this.validator,
       this.isObscure = false,
-      required this.text});
+      required this.text,
+      required this.controller});
   final String? Function(String?)? validator;
   final bool isObscure;
   final String text;
+  final TextEditingController controller;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       validator: validator,
       decoration: InputDecoration(
           enabledBorder: const OutlineInputBorder(
