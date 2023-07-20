@@ -7,9 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DataServices {
   DataServices._privateConstructor();
+  //declarations
   static final instance = DataServices._privateConstructor();
-  ValueNotifier<List<Restaurant>> restaurantNotifier = ValueNotifier([]);
   static const String dbName = 'emailDb';
+
+  ///Get restaurant data
   Future<List<Restaurant>> getData() async {
     const String url =
         'https://run.mocky.io/v3/b91498e7-c7fd-48bc-b16a-5cb970a3af8a';
@@ -19,8 +21,6 @@ class DataServices {
     final result = (json.decode(response.body)['restaurants'] as List)
         .map((e) => Restaurant.fromJson(e))
         .toList();
-
-    restaurantNotifier.value.addAll(result);
     return result;
   }
 
@@ -28,7 +28,6 @@ class DataServices {
     final box = await Hive.openBox(dbName);
     if (!box.values.contains(email)) {
       box.add(email);
-      print(box.values);
     }
   }
 

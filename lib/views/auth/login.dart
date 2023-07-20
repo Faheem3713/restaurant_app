@@ -69,7 +69,7 @@ class LoginPage extends StatelessWidget {
                     const Text('Remember Me'),
                     const Spacer(),
                     const Text(
-                      'Forgot passwort.?',
+                      'Forgot password.?',
                       style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
