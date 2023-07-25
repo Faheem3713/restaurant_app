@@ -4,7 +4,8 @@ A new Flutter project.
 
 ## Getting Started
 
-A Restaurant app Shows restaurant views.
+A Restaurant app Shows restaurant views details also google map.
+
 
 A few resources to get you started if this is your first Flutter project:
 
