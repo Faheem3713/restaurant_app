@@ -16,4 +16,9 @@ void main() {
     expect(result, 2);
     expect(result, isNot(3));
   });
+  test('chek if ready ', () {
+    final result = 2 + 1;
+    expect(result, 3);
+    expect(result, isNot(4));
+  });
 }
